@@ -1,17 +1,86 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
-public class Main {
-    public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.sql.*;
+public class JDBCDemo{
+    public static void main(String[] args) throws Exception {
+        insertUsingPst();
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+    }
+    public static void readRecords() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        String query = "select * from employee";
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(query);
+
+        while(rs.next()){
+            System.out.println("Id is " + rs.getInt(1));
+            System.out.println("Name is " + rs.getString(2));
+            System.out.println("Salary is " + rs.getInt(3));
         }
+        con.close();
+    }
+    //insert records
+    public static void insertRecords() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        String query = "insert into employee values (4,'Priya',25000)";
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        Statement st = con.createStatement();
+        int rows = st.executeUpdate(query);
+
+        System.out.println("Number of rows affected: "+ rows);
+        con.close();
+    }
+// insert data using variables
+    public static void insertVar() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        int id=5;
+        String name = "Vimala";
+        int salary= 30000;
+
+       //String query = "insert into employee values (4,'Priya',25000);"
+        String query= "insert into employee values (" + id + ",'" +name + "'," +salary + ");";
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        Statement st = con.createStatement();
+        int rows = st.executeUpdate(query);
+
+        System.out.println("Number of rows affected: "+ rows);
+        con.close();
+    }
+
+    // insert with prepared statement
+    public static void insertUsingPst() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        int id=7;
+        String name = "Renu";
+        int salary= 30000;
+
+        //String query = "insert into employee values (4,'Priya',25000);"
+        String query= "insert into employee values (?,?,?);";
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+
+
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setInt(1,id);
+        pst.setString(2,name);
+        pst.setInt(3,salary);
+        int rows = pst.executeUpdate();
+
+        System.out.println("Number of rows affected: "+ rows);
+
+        con.close();
     }
 }
