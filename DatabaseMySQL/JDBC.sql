@@ -36,3 +36,18 @@ begin
 select * from employee where emp_id=id;
 end$$
 delimiter ;
+
+-- calling stored procedure with in and out parameter
+delimiter $$
+create procedure GetNameById(IN id int,OUT empname varchar(40))
+begin
+select ename from employee where emp_id=id into empname;
+end$$
+delimiter ;
+
+
+
+
+
+
+

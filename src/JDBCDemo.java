@@ -1,9 +1,11 @@
 import java.sql.*;
 public class JDBCDemo{
     public static void main(String[] args) throws Exception {
-        sp2();
+        sp3();
 
     }
+
+    //read records
     public static void readRecords() throws Exception {
         String url = "jdbc:mysql://localhost:3307/jdbc_db";
         String userName = "root";
@@ -167,6 +169,26 @@ public class JDBCDemo{
 
         con.close();
     }
+    //calling stored procedure with in and out parameter
+    public static void sp3() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        int id = 3;
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        CallableStatement cst = con.prepareCall("{call GetNameById(?,?)}");
+        cst.setInt(1, id);
+        cst.registerOutParameter(2,Types.VARCHAR);
+
+        cst.executeUpdate();
+        System.out.println(cst.getString(2));
+
+
+        con.close();
+    }
+
 
 
 
