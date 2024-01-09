@@ -1,7 +1,7 @@
 import java.sql.*;
 public class JDBCDemo{
     public static void main(String[] args) throws Exception {
-        delete();
+        sp();
 
     }
     public static void readRecords() throws Exception {
@@ -121,4 +121,50 @@ public class JDBCDemo{
 
         con.close();
     }
+
+    //Types of statement
+    // 1. Normal ststement (select, read, update, delete)
+    // 2. Prepared ststement ((select, read, update, delete))
+    // 3. Callable ststement (to call stored procedure)
+
+    // calling simple stored procedure
+    public static void sp() throws Exception{
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        CallableStatement cst = con.prepareCall("{call GetEmp()}");
+        ResultSet rs = cst.executeQuery();
+
+        while(rs.next()){
+            System.out.println("Id is " + rs.getInt(1));
+            System.out.println("Name is " + rs.getString(2));
+            System.out.println("Salary is " + rs.getInt(3));
+        }
+
+        con.close();
+    }
+
+    public static void dropProcedure() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        Statement stmt = con.createStatement();
+
+        try {
+            // Drop the stored procedure if it exists
+            stmt.executeUpdate("DROP PROCEDURE IF EXISTS GetEmp");
+            System.out.println("Stored procedure dropped successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            con.close();
+        }
+    }
+
+
 }
+
