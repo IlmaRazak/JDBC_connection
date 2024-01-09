@@ -1,7 +1,7 @@
 import java.sql.*;
 public class JDBCDemo{
     public static void main(String[] args) throws Exception {
-        insertUsingPst();
+        delete();
 
     }
     public static void readRecords() throws Exception {
@@ -78,6 +78,44 @@ public class JDBCDemo{
         pst.setString(2,name);
         pst.setInt(3,salary);
         int rows = pst.executeUpdate();
+
+        System.out.println("Number of rows affected: "+ rows);
+
+        con.close();
+    }
+
+    //delete
+    public static void delete() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        //String query = "insert into employee values (4,'Priya',25000);"
+
+        int id = 6;
+        String query= "delete from employee where emp_id= " + id;
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        Statement st = con.createStatement();
+        int rows = st.executeUpdate(query);
+
+        System.out.println("Number of rows affected: "+ rows);
+
+        con.close();
+    }
+
+    //update
+    public static void update() throws Exception {
+        String url = "jdbc:mysql://localhost:3307/jdbc_db";
+        String userName = "root";
+        String passWord = "root";
+
+        //String query = "insert into employee values (4,'Priya',25000);"
+        String query= "update employee set salary = 50000 where emp_id=1";
+
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        Statement st = con.createStatement();
+        int rows = st.executeUpdate(query);
 
         System.out.println("Number of rows affected: "+ rows);
 
