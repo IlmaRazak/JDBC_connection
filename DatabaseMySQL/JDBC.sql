@@ -12,7 +12,8 @@ insert into employee values (3,"Rishi", 40000);
 
 
 use jdbc_db;
--- create procedure
+
+-- create procedure --
 delimiter $$
 create procedure GetEmp()
 begin
@@ -22,6 +23,16 @@ delimiter ;
 
 SELECT * FROM jdbc_db.employee;
 
+-- call procedure --
 call GetEmp();
 
+-- drop procedure --
 DROP PROCEDURE IF EXISTS GetEmp;
+
+-- calling stored procedure with input parameter --
+delimiter $$
+create procedure GetEmpById(In id int)
+begin
+select * from employee where emp_id=id;
+end$$
+delimiter ;

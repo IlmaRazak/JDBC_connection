@@ -1,7 +1,7 @@
 import java.sql.*;
 public class JDBCDemo{
     public static void main(String[] args) throws Exception {
-        sp();
+        sp2();
 
     }
     public static void readRecords() throws Exception {
@@ -146,24 +146,29 @@ public class JDBCDemo{
         con.close();
     }
 
-    public static void dropProcedure() throws Exception {
+    // calling stored procedure with input parameter
+    public static void sp2() throws Exception {
         String url = "jdbc:mysql://localhost:3307/jdbc_db";
         String userName = "root";
         String passWord = "root";
 
-        Connection con = DriverManager.getConnection(url, userName, passWord);
-        Statement stmt = con.createStatement();
+        int id = 3;
 
-        try {
-            // Drop the stored procedure if it exists
-            stmt.executeUpdate("DROP PROCEDURE IF EXISTS GetEmp");
-            System.out.println("Stored procedure dropped successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            con.close();
+        Connection con = DriverManager.getConnection(url, userName, passWord);
+        CallableStatement cst = con.prepareCall("{call GetEmpById(?)}");
+        cst.setInt(1, id);
+        ResultSet rs = cst.executeQuery();
+
+        while (rs.next()) {
+            System.out.println("Id is " + rs.getInt(1));
+            System.out.println("Name is " + rs.getString(2));
+            System.out.println("Salary is " + rs.getInt(3));
         }
+
+        con.close();
     }
+
+
 
 
 }
